@@ -4,8 +4,8 @@ from vedo import Volume, Plotter, Text2D
 
 # 1. Setup paths robustly
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parent
-full_path = PROJECT_ROOT / "data" / "raw" / "GH" / "gras_9_042.tif"
+PROJECT_ROOT = SCRIPT_DIR.parent.parent
+full_path = PROJECT_ROOT / "data" / "raw" / "bugNIST_900" / "GH" / "gras_9_043.tif"
 
 if not full_path.exists():
     print(f"Error: Could not find file at {full_path}")
@@ -18,6 +18,7 @@ vol = Volume(str(full_path))
 # 2. Filter the background noise
 print(f"Filtering intensities below {filter_value}...")
 vol_data = vol.tonumpy()
+print(f"Volume shape: {vol_data.shape}")
 vol_data[vol_data < filter_value] = 0
 clean_vol = Volume(vol_data, spacing=vol.spacing(), origin=vol.origin())
 clean_vol.mode(0).cmap("jet").alpha([0, 0.2, 0.8, 1])
