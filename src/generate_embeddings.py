@@ -25,6 +25,7 @@ Usage examples:
 import argparse
 import pickle
 import sys
+import time
 from pathlib import Path
 
 import numpy as np
@@ -37,7 +38,7 @@ SCRIPT_DIR   = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent
 PROC_ROOT    = PROJECT_ROOT / "data" / "processed" / "bugNIST_900"
 EMB_ROOT     = PROJECT_ROOT / "data" / "embeddings" / "bugNIST_900"
-MODEL_PATH   = PROJECT_ROOT / "models" / "dinov3_local"
+MODEL_PATH   = PROJECT_ROOT / "models" / "vitb16"
 
 # ── DINOv3 constants ──────────────────────────────────────────────────────────
 # The model has 1 [CLS] token + num_register_tokens register tokens prepended
@@ -213,6 +214,8 @@ def resolve_image_dirs(specimen_dir: Path, n_images: str) -> list[Path]:
 
 
 def main():
+    t_start = time.time()
+
     args    = parse_args()
     device  = resolve_device(args.device)
     print(f"Device: {device}")
@@ -236,6 +239,13 @@ def main():
     for image_dir in image_dirs:
         process_image(image_dir, processor, model, device)
 
+    total_time = time.time() - t_start
+    n_views = 15
+    avg_per_view = total_time / n_views
+    print(f"\n{'='*60}")
+    print(f"  Total time:          {total_time:.2f} s")
+    print(f"  Average per view:    {avg_per_view:.2f} s  ({n_views} views)")
+    print(f"{'='*60}")
     print("\nAll done.")
 
 

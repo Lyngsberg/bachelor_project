@@ -5,7 +5,7 @@ from vedo import Volume, Plotter, Text2D
 # 1. Setup paths robustly
 SCRIPT_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = SCRIPT_DIR.parent.parent
-full_path = PROJECT_ROOT / "data" / "raw" / "bugNIST_900" / "GH" / "gras_9_043.tif"
+full_path = PROJECT_ROOT / "data" / "raw" / "bugNIST_900" / "GH" / "gras_9_042.tif"
 
 if not full_path.exists():
     print(f"Error: Could not find file at {full_path}")
@@ -21,7 +21,7 @@ vol_data = vol.tonumpy()
 print(f"Volume shape: {vol_data.shape}")
 vol_data[vol_data < filter_value] = 0
 clean_vol = Volume(vol_data, spacing=vol.spacing(), origin=vol.origin())
-clean_vol.mode(0).cmap("jet").alpha([0, 0.2, 0.8, 1])
+clean_vol.mode(0).cmap("bone").alpha([0, 0.15, 0.8, 1])
 
 # 3. Create Plotter and the HUD overlay
 plt = Plotter(axes=1, title="Live Math HUD")
@@ -93,3 +93,13 @@ plt.add_callback("InteractionEvent", update_hud)
 # 6. Show the volume and the HUD
 print("Opening viewer... Rotate the grasshopper to see the matrices update live!")
 plt.show(clean_vol, hud_text, interactive=True)
+
+# ── 7. Second viewer: raw volume WITHOUT any thresholding ─────────────────────
+print("\nOpening raw (unfiltered) 3D viewer...")
+raw_data = Volume(str(full_path)).tonumpy().astype(np.float32)
+raw_vol = Volume(raw_data, spacing=vol.spacing(), origin=vol.origin())
+raw_vol.mode(0).cmap("bone").alpha([0, 0.15, 0.8, 1])
+
+plt_raw = Plotter(axes=1, title="Raw Volume (no thresholding)")
+plt_raw.show(raw_vol, interactive=True)
+print("Done.")

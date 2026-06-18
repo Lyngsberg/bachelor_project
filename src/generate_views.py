@@ -213,7 +213,7 @@ def parse_args():
     parser.add_argument(
         "--n-views", "-v",
         type=int,
-        default=5,
+        default=15,
         metavar="N",
         help="Number of camera positions (views) to generate per TIFF.",
     )
